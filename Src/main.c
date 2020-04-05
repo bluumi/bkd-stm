@@ -126,15 +126,15 @@ buffer:  [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ] [ ]  (12 bytes)
 read_i:                       ^
 write_i:                      ^
 */
-#if 0
+
 bool cmd_handler__led(void);
 bool cmd_handler__print(void);
 
 static CMDDesc_t command_descriptions[]=
 {
-		{.p_cmd = "LED", .
+		{.p_cmd = "LED", .p_hint = "LED ON/OF", .p_handler = cmd_handler__led}
 };
-#endif
+
 
 /* USER CODE END PV */
 
