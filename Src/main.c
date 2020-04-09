@@ -31,14 +31,6 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-typedef bool (*p_CMDHandler_f)(void);
-
-typedef struct CMDDesc_s{
-	char *p_cmd;
-	char *p_hint;
-	p_CMDHandler_f p_handler;
-} CMDDesc_t, *p_CMDDesc_t;
-
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -127,15 +119,6 @@ read_i:                       ^
 write_i:                      ^
 */
 
-bool cmd_handler__led(void);
-bool cmd_handler__print(void);
-
-static CMDDesc_t command_descriptions[]=
-{
-		{.p_cmd = "LED", .p_hint = "LED ON/OF", .p_handler = cmd_handler__led}
-};
-
-
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -203,22 +186,20 @@ int main(void)
 		  // if found, processing string until that symbol
 		  // erasing this string + LF symbol
 
-		  // 0x0D - "Enter" HEX code
 		  continue;
 
 		  if ((len >= 2) && (strncmp((char*)receive_buffer_peek_data, "ON", 2) == 0))
 		  {
-			  // turn LED ON
-			  	HAL_GPIO_WritePin(GPIOB, LD2_PIN, GPIO_PIN_SET);
-				receive_buffer_erase(2);
+			  	HAL_GPIO_WritePin(GPIOB, LD1_Pin, GPIO_PIN_SET);
+			  	receive_buffer_erase(2);
 		  } else if ((len >= 3) && (strncmp((char*)receive_buffer_peek_data, "OFF", 3) == 0))
 		  {
 			  // turn LED OFF
-			  	HAL_GPIO_WritePin(GPIOB, LD2_PIN, GPIO_PIN_RESET);
+			  	HAL_GPIO_WritePin(GPIOB, LD1_Pin, GPIO_PIN_RESET);
 			  	receive_buffer_erase(3);
 		  } else if ((len >= 5) && (strncmp((char*)receive_buffer_peek_data, "PRINT", 5) == 0))
 		  {
-				sprintf(cmdbuf,"id=%d, test sending the text.............:",count++);
+				sprintf(cmdbuf,"Test print:%d\n",count++);
 				MX_USB_SEND_DATA((uint8_t *)cmdbuf,strlen(cmdbuf));
 				receive_buffer_erase(5);
 		  } else
@@ -389,8 +370,6 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-  // RED LED LD3 on fatal error.
-//  HAL_GPIO_WritePin(GPIOB, LD3_Pin, GPIO_PIN_SET);
 //  while(1){
 //	  // loop forever (halt)
 //  }
